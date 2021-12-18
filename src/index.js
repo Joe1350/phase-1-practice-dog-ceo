@@ -9,13 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdown = document.querySelector('#breed-dropdown')
 
         // fetches
-    fetch(imgUrl)
+    function getImages() {
+        fetch(imgUrl)
         .then(r => r.json())
         .then(images => images.message.forEach(imageLink => renderImgs(imageLink)));
+    }
 
-    fetch(breedUrl)
+    function getDogs() {
+        fetch(breedUrl)
         .then(r => r.json())
-        .then(allBreeds => renderBreeds(allBreeds))//allBreeds.message.forEach(breed => renderBreeds(breed)))
+        .then(breeds => renderBreeds(breeds))
+    }
+
+        //event listeners
+    dropdown.addEventListener('change', (e) => {
+        breedContainer.innerText = ''
+        let value = e.target.value
+        fetch(breedUrl)
+        .then(r => r.json())
+        .then(breeds => renderFilteredBreeds(breeds, value))
+    })
 
         // callbacks
     function renderImgs(imageLink) {
@@ -26,9 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         imgContainer.append(img)
     }
 
-    function renderBreeds(allBreeds) {
-        for(let breed in allBreeds.message) {
-            let breedArray = allBreeds.message[breed];
+    function renderBreeds(breeds) {
+        for(let breed in breeds.message) {
+            let breedArray = breeds.message[breed];
             if(breedArray.length > 0) {
                 for(let i=0; i < breedArray.length; i++) {
                     let dogBreed = document.createElement("li")
@@ -45,4 +58,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function renderFilteredBreeds(breeds, value) {
+        for(let breed in breeds.message) {
+            let breedArray = breeds.message[breed]
+            if(breed.charAt(0) == value) {
+                if(breedArray.length > 0) {
+                    for(let i=0; i < breedArray.length; i++) {
+                        let dogBreed = document.createElement("li")
+                        dogBreed.textContent = `${breedArray[i]} ${breed}`;
+                        breedContainer.append(dogBreed)
+                        dogBreed.addEventListener('click', () => dogBreed.style.color = 'red')
+                    }
+                } else {
+                    let dogBreed = document.createElement("li")
+                    dogBreed.textContent = breed;
+                    breedContainer.append(dogBreed);
+                    dogBreed.addEventListener('click', () => dogBreed.style.color = 'red')
+                }
+            }
+        }
+    }
+
+        //initialize
+    getImages()
+    getDogs()
 })
