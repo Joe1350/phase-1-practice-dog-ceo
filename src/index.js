@@ -45,15 +45,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
-    // // jquery, not js... but I feel like I'm headed somewhere with the code-block
-    // dropdown.change(() => {
-    //     breedArray.filter(() => {
-    //         if ('item in array' = dropdown.value) {
-    //             return true
-    //         } else {
-    //             return false
-    //         }
-    //     })
-    // })
 })
